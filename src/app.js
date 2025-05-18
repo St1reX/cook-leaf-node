@@ -8,6 +8,7 @@ const dbConnect = require("./utils/db");
 
 //Routes
 const recipeRoutes = require("./routes/recipeRoutes");
+const ingredientRoutes = require("./routes/ingredientRoutes");
 
 {
   dbConnect();
@@ -15,6 +16,7 @@ const recipeRoutes = require("./routes/recipeRoutes");
   app.use(cors());
   app.use(express.json());
   app.use("/recipes", recipeRoutes);
+  app.use("/ingredients", ingredientRoutes);
 
   app.listen(8080);
 }

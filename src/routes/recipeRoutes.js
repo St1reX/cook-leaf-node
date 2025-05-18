@@ -6,5 +6,6 @@ const router = express.Router();
 const recipeController = require("../controllers/recipeController");
 
 router.get("/", recipeController.getRecipes);
+router.get("/:id", recipeController.getRecipeDetails);
 
 module.exports = router;
