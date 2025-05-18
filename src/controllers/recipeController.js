@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Recipe = require("../models/Recipe");
 const Category = require("../models/Category");
 const Unit = require("../models/Unit");
@@ -29,6 +30,12 @@ async function getRecipes(req, res) {
 async function getRecipeDetails(req, res) {
   let recipeID = req.path.split("/");
   recipeID = recipeID[recipeID.length - 1];
+
+  if (!mongoose.isValidObjectId(recipeID)) {
+    console.log("adasdsadsa");
+
+    return res.status(404).json({ message: "Recipe not found!" });
+  }
 
   const recipe = await Recipe.findById(recipeID)
     .populate("categories")
