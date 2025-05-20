@@ -6,6 +6,9 @@ var cors = require("cors");
 //DB Connection
 const dbConnect = require("./utils/db");
 
+//Middleware
+const errorHandler = require("./middleware/errorHandler");
+
 //Routes
 const recipeRoutes = require("./routes/recipeRoutes");
 const ingredientRoutes = require("./routes/ingredientRoutes");
@@ -19,6 +22,7 @@ const authRoutes = require("./routes/authRoutes");
   app.use("/recipes", recipeRoutes);
   app.use("/ingredients", ingredientRoutes);
   app.use("/auth", authRoutes);
+  app.use(errorHandler);
 
   app.listen(8080);
 }
