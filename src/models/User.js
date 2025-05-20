@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  password: String,
-  mail: String,
-  role: String,
+  password: { type: String, required: true },
+  mail: { type: String, unique: true, required: true },
+  role: { type: String, required: true },
   created_at: { type: Date, default: Date.now },
   profile_picture_path: String,
   scheduled_recipes: [
