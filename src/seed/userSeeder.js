@@ -8,14 +8,13 @@ async function seedUsers() {
   }
 
   const userExample = new User({
-    password: "5ad373f85aa33a9cb69c7ee4d5c8e1e375f997946a0a66ba7d248ea7b2a72c53",
+    password: "e15b02c1ec46fe2bc89e1cf752a3b8ce7ca1d84f9ee712322d4c321f925ae963",
     mail: "urygajakub@gmail.com",
     role: "admin",
     created_at: moment(),
-    profile_picture_path:
-      "https://i0.wp.com/profilesframe.com/wp-content/uploads/2019/06/I-Love-My-Dad-Profile-Picture-Frame.jpg",
-    scheduled_recipes: null,
-    favourite_recipes: null,
+    profile_picture_path: "/uploads/avatars/basicAvatar.png",
+    scheduled_recipes: [],
+    favourite_recipes: [],
   });
 
   await userExample.save();
