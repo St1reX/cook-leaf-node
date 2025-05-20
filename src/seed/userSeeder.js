@@ -12,7 +12,7 @@ async function seedUsers() {
     mail: "urygajakub@gmail.com",
     role: "admin",
     created_at: moment(),
-    profile_picture_path: "/uploads/avatars/basicAvatar.png",
+    profile_picture_path: "http://localhost:8080/avatars/basicAvatar.png",
     scheduled_recipes: [],
     favourite_recipes: [],
   });

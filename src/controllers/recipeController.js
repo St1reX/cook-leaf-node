@@ -20,36 +20,38 @@ async function getRecipes(req, res) {
 
     res.status(200).json(recipes);
   } catch (err) {
-    res.status(500).json({
-      communicate: "Internal server error occurred!",
-      error: err,
-    });
+    next(err, req, res);
   }
 }
 
 async function getRecipeDetails(req, res) {
-  let recipeID = req.path.split("/");
-  recipeID = recipeID[recipeID.length - 1];
+  try {
+    let recipeID = req.path.split("/");
+    recipeID = recipeID[recipeID.length - 1];
 
-  if (!mongoose.isValidObjectId(recipeID)) {
-    console.log("adasdsadsa");
+    const notFoundErr = new Error("Recipe not found!");
+    notFoundErr.status = 404;
 
-    return res.status(404).json({ message: "Recipe not found!" });
+    if (!mongoose.isValidObjectId(recipeID)) {
+      throw notFoundErr;
+    }
+
+    const recipe = await Recipe.findById(recipeID)
+      .populate("categories")
+      .populate("ingredients.ingredient", "ingredient_name photo_path")
+      .populate("ingredients.unit")
+      .exec();
+
+    if (!recipe) {
+      throw notFoundErr;
+    }
+
+    const recipeObj = recipe.toObject();
+    recipeObj.reviews_count = recipe.reviews.length;
+    res.status(200).json(recipeObj);
+  } catch (err) {
+    next(err, req, res);
   }
-
-  const recipe = await Recipe.findById(recipeID)
-    .populate("categories")
-    .populate("ingredients.ingredient", "ingredient_name photo_path")
-    .populate("ingredients.unit")
-    .exec();
-
-  if (!recipe) {
-    return res.status(404).json({ message: "Recipe not found!" });
-  }
-
-  const recipeObj = recipe.toObject();
-  recipeObj.reviews_count = recipe.reviews.length;
-  res.status(200).json(recipeObj);
 }
 
 module.exports = {

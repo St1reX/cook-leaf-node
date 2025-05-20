@@ -13,6 +13,7 @@ const passport = require("passport");
 const cookieParser = require("cookie-parser");
 
 //Routes
+const userRoutes = require("./routes/userRoutes");
 const recipeRoutes = require("./routes/recipeRoutes");
 const ingredientRoutes = require("./routes/ingredientRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -21,7 +22,7 @@ const authRoutes = require("./routes/authRoutes");
   dbConnect();
 
   //Build-in middlewares
-  app.use(cors());
+  app.use(cors({ origin: "http://localhost:5173", credentials: true }));
   app.use(express.json());
   app.use(cookieParser());
 
@@ -32,6 +33,7 @@ const authRoutes = require("./routes/authRoutes");
   app.use(express.static(path.join(__dirname, "uploads")));
 
   //Routes to endpoints
+  app.use("/user", userRoutes);
   app.use("/recipes", recipeRoutes);
   app.use("/ingredients", ingredientRoutes);
   app.use("/auth", authRoutes);
