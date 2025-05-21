@@ -11,4 +11,7 @@ const authenticateJWT = require("../middleware/auth");
 router.post("/favourites", authenticateJWT, userController.addRecipeToFavourites);
 router.delete("/favourites", authenticateJWT, userController.removeRecipeFromFavourites);
 
+router.post("/schedule", authenticateJWT, userController.addRecipeToScheduled);
+//router.delete("/schedule", authenticateJWT, userController.removeRecipeFromScheduled);
+
 module.exports = router;

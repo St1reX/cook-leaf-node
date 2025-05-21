@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const moment = require("moment");
 const User = require("../models/User");
 
 async function addRecipeToFavourites(req, res, next) {
@@ -49,7 +50,49 @@ async function removeRecipeFromFavourites(req, res, next) {
   }
 }
 
+async function addRecipeToScheduled(req, res, next) {
+  try {
+    const userID = req.user._id;
+    const { recipe_id, scheduled_dates } = req.body;
+
+    console.log(userID);
+    console.log(recipe_id);
+    console.log(scheduled_dates);
+
+    const userToModify = await User.findById(userID).exec();
+    const recipe_object_id = mongoose.Types.ObjectId.createFromHexString(recipe_id);
+
+    const alreadyScheduledDates = scheduled_dates.filter((date) =>
+      userToModify.scheduled_recipes.some(
+        (entry) =>
+          entry.recipe.toString() === recipe_object_id.toString() &&
+          moment(entry.date).toDate("YYYY-MM-DD") === moment(date).toDate("YYYY-MM-DD")
+      )
+    );
+
+    if (alreadyScheduledDates.length > 0) {
+      const err = new Error("One or more of the selected dates are already scheduled for this recipe!");
+      err.status = 400;
+      throw err;
+    }
+
+    scheduled_dates.forEach((date) => {
+      userToModify.scheduled_recipes.push({
+        recipe: recipe_object_id,
+        date: moment(date).toDate("YYYY-MM-DD"),
+      });
+    });
+
+    await userToModify.save();
+
+    res.status(200).json({ message: "Recipe successfully scheduled for selected dates." });
+  } catch (err) {
+    next(err, req, res);
+  }
+}
+
 module.exports = {
   addRecipeToFavourites,
   removeRecipeFromFavourites,
+  addRecipeToScheduled,
 };
