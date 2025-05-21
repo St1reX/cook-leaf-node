@@ -9,5 +9,6 @@ const userController = require("../controllers/userController");
 const authenticateJWT = require("../middleware/auth");
 
 router.post("/favourites", authenticateJWT, userController.addRecipeToFavourites);
+router.delete("/favourites", authenticateJWT, userController.removeRecipeFromFavourites);
 
 module.exports = router;
