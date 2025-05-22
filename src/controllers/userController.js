@@ -55,10 +55,6 @@ async function addRecipeToScheduled(req, res, next) {
     const userID = req.user._id;
     const { recipe_id, scheduled_dates } = req.body;
 
-    console.log(userID);
-    console.log(recipe_id);
-    console.log(scheduled_dates);
-
     const userToModify = await User.findById(userID).exec();
     const recipe_object_id = mongoose.Types.ObjectId.createFromHexString(recipe_id);
 
@@ -91,8 +87,31 @@ async function addRecipeToScheduled(req, res, next) {
   }
 }
 
+async function removeRecipeFromScheduled(req, res, next) {
+  try {
+    const userID = req.user._id;
+    const { recipe_id, scheduled_date } = req.body;
+
+    const userToModify = await User.findById(userID).exec();
+    const recipe_object_id = mongoose.Types.ObjectId.createFromHexString(recipe_id);
+
+    userToModify.scheduled_recipes = userToModify.scheduled_recipes.filter(
+      (entry) =>
+        entry.recipe.toString() !== recipe_object_id.toString() ||
+        moment(entry.date).format("YYYY-MM-DD") !== moment(scheduled_date).format("YYYY-MM-DD")
+    );
+
+    await userToModify.save();
+
+    res.status(200).json({ message: "Recipe successfully removed from scheduled date." });
+  } catch (err) {
+    next(err, req, res);
+  }
+}
+
 module.exports = {
   addRecipeToFavourites,
   removeRecipeFromFavourites,
   addRecipeToScheduled,
+  removeRecipeFromScheduled,
 };

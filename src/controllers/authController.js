@@ -9,7 +9,7 @@ async function registerUser(req, res, next) {
     const potentialExistingUser = await User.find({ mail: email }).exec();
     if (potentialExistingUser.length > 0) {
       const err = new Error("User with provided mail already exists!");
-      err.status = 401;
+      err.status = 400;
       throw err;
     }
 
@@ -61,7 +61,8 @@ async function loginUser(req, res, next) {
       domain: "localhost",
       secure: false,
     });
-    res.json(loggedUser);
+
+    res.json({ message: "You have been logged in successfully!", user: loggedUser });
   } catch (err) {
     next(err, req, res);
   }

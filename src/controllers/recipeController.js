@@ -4,7 +4,7 @@ const Category = require("../models/Category");
 const Unit = require("../models/Unit");
 const Ingredient = require("../models/Ingredient");
 
-async function getRecipes(req, res) {
+async function getRecipes(req, res, next) {
   try {
     const recipes = await Recipe.aggregate([
       {
@@ -24,7 +24,7 @@ async function getRecipes(req, res) {
   }
 }
 
-async function getRecipeDetails(req, res) {
+async function getRecipeDetails(req, res, next) {
   try {
     let recipeID = req.path.split("/");
     recipeID = recipeID[recipeID.length - 1];
@@ -54,7 +54,20 @@ async function getRecipeDetails(req, res) {
   }
 }
 
+async function getRecipesByName(req, res, next) {
+  try {
+    const searchTerm = req.query.name;
+    const regex = new RegExp(searchTerm, "i");
+    const recipes = await Recipe.find({ recipe_name: regex }).limit(8).exec();
+
+    res.json(recipes);
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getRecipes,
   getRecipeDetails,
+  getRecipesByName,
 };
