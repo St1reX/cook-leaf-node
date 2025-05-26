@@ -97,8 +97,10 @@ async function removeRecipeFromScheduled(req, res, next) {
 
     userToModify.scheduled_recipes = userToModify.scheduled_recipes.filter(
       (entry) =>
-        entry.recipe.toString() !== recipe_object_id.toString() ||
-        moment(entry.date).format("YYYY-MM-DD") !== moment(scheduled_date).format("YYYY-MM-DD")
+        !(
+          entry.recipe.toString() === recipe_object_id.toString() &&
+          moment(entry.date).format("YYYY-MM-DD") === moment(scheduled_date).format("YYYY-MM-DD")
+        )
     );
 
     await userToModify.save();

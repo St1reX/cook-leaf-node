@@ -66,8 +66,13 @@ async function getRecipesByName(req, res, next) {
   }
 }
 
+async function addRecipe(req, res, next) {
+  console.log(req.body);
+}
+
 module.exports = {
   getRecipes,
   getRecipeDetails,
   getRecipesByName,
+  addRecipe,
 };

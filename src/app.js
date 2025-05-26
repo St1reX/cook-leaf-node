@@ -17,6 +17,8 @@ const userRoutes = require("./routes/userRoutes");
 const recipeRoutes = require("./routes/recipeRoutes");
 const ingredientRoutes = require("./routes/ingredientRoutes");
 const authRoutes = require("./routes/authRoutes");
+const unitRoutes = require("./routes/unitRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 {
   dbConnect();
@@ -36,6 +38,8 @@ const authRoutes = require("./routes/authRoutes");
   app.use("/user", userRoutes);
   app.use("/recipes", recipeRoutes);
   app.use("/ingredients", ingredientRoutes);
+  app.use("/units", unitRoutes);
+  app.use("/categories", categoryRoutes);
   app.use("/auth", authRoutes);
   app.use(errorHandler);
 
