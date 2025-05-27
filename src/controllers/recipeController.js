@@ -1,8 +1,5 @@
 const mongoose = require("mongoose");
 const Recipe = require("../models/Recipe");
-const Category = require("../models/Category");
-const Unit = require("../models/Unit");
-const Ingredient = require("../models/Ingredient");
 
 async function getRecipes(req, res, next) {
   try {
@@ -67,7 +64,33 @@ async function getRecipesByName(req, res, next) {
 }
 
 async function addRecipe(req, res, next) {
-  console.log(req.body);
+  try {
+    const { name, difficulty_level, portions_amount, ingredients, steps, photoName } = req.body;
+    const parsedIngredients = JSON.parse(ingredients);
+    const parsedSteps = JSON.parse(steps);
+
+    await Recipe.create({
+      recipe_name: name,
+      difficulty_level: difficulty_level,
+      portions_amount: portions_amount,
+      ingredients: parsedIngredients.map((element) => ({
+        ingredient: mongoose.Types.ObjectId.createFromHexString(element._id),
+        amount: element.amount,
+        unit: element.unit_id,
+      })),
+      steps: parsedSteps.map((element) => ({
+        description: element.description,
+        estimated_time: element.estimated_time,
+      })),
+      estimated_time: parsedSteps.reduce((acc, step) => acc + step.estimated_time, 0),
+      avg_rating: 5,
+      photo_path: "http://localhost:8080/recipes/" + photoName,
+    });
+
+    res.status(200).json({ message: "Recipe created successfully!" });
+  } catch (err) {
+    next(err);
+  }
 }
 
 module.exports = {

@@ -23,8 +23,7 @@ async function registerUser(req, res, next) {
       favourite_recipes: [],
     });
 
-    res.status(200);
-    res.send();
+    res.status(200).json({ message: "You have been registered successfully!", user: loggedUser });
   } catch (err) {
     next(err, req, res);
   }
