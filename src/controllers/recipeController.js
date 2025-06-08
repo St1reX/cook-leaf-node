@@ -35,7 +35,7 @@ async function getRecipeDetails(req, res, next) {
 
     const recipe = await Recipe.findById(recipeID)
       .populate("categories")
-      .populate("ingredients.ingredient", "ingredient_name photo_path")
+      .populate("ingredients.ingredient")
       .populate("ingredients.unit")
       .exec();
 
