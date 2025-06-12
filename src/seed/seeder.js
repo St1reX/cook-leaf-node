@@ -19,4 +19,4 @@ async function runSeeders() {
   }
 }
 
-runSeeders().catch(console.error);
+runSeeders().catch(console.error).then(process.exit(0));
