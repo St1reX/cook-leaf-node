@@ -31,8 +31,16 @@ const categoryRoutes = require("./routes/categoryRoutes");
   //Passport
   app.use(passport.initialize());
 
-  //Static files
-  app.use(express.static(path.join(__dirname, "uploads")));
+  //Static files with caching
+  app.use(
+    express.static(path.join(__dirname, 'uploads')),
+    express.static(path.join(__dirname, 'uploads'), {
+      maxAge: '1h',
+      setHeaders: (res, path) => {
+        res.set('Cache-Control', 'public, max-age=3600');
+      },
+    })
+  );
 
   //Routes to endpoints
   app.use("/user", userRoutes);
