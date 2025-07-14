@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const moment = require("moment");
-const User = require("../models/User");
+const User = require("../../models/User");
 
 async function addRecipeToFavourites(req, res, next) {
   try {

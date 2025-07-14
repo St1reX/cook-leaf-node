@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const ingredientSchema = new mongoose.Schema({
+export const ingredientSchema = new mongoose.Schema({
   ingredient_name: String,
   photo_path: String,
   nutrition_per_gram: {
@@ -15,4 +15,6 @@ const ingredientSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Ingredient", ingredientSchema);
+const Ingredient = mongoose.model("Ingredient", ingredientSchema);
+
+export default Ingredient;

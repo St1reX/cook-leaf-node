@@ -1,9 +1,8 @@
-async function handlerErrors(err, req, res, next) {
-  const status = err.status || 500;
-  const message = err.message || "Internal Server Error";
-  res.status(status).json({
-    message,
+export default function handleErrors(err, req, res, next) {
+  res.status(err.statusCode).json({
+    success: false,
+    message: err.message,
+    type: err.type,
+    details: err.details,
   });
 }
-
-module.exports = handlerErrors;

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Recipe = require("../models/Recipe");
+const Recipe = require("../../models/Recipe");
 
 async function getRecipes(req, res, next) {
   try {
@@ -26,9 +26,6 @@ async function getRecipeDetails(req, res, next) {
     let recipeID = req.path.split("/");
     recipeID = recipeID[recipeID.length - 1];
 
-    const notFoundErr = new Error("Recipe not found!");
-    notFoundErr.status = 404;
-
     if (!mongoose.isValidObjectId(recipeID)) {
       throw notFoundErr;
     }
@@ -40,6 +37,8 @@ async function getRecipeDetails(req, res, next) {
       .exec();
 
     if (!recipe) {
+      const notFoundErr = new Error("Recipe not found!");
+      notFoundErr.status = 404;
       throw notFoundErr;
     }
 

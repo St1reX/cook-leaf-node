@@ -1,10 +1,10 @@
 //Express
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 //Controller
-const ingredientController = require("../controllers/ingredientController");
+import ingredientController from "../modules/controllers/ingredientController.js";
 
 router.get("/", ingredientController.getIngredientsByName);
 
-module.exports = router;
+export default router;

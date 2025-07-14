@@ -1,55 +1,44 @@
 //Express
-const express = require("express");
+import express from "express";
 const app = express();
-const cors = require("cors");
-const path = require("path");
+import cors from "cors";
+import path from "path";
 
 //DB Connection
-const dbConnect = require("./utils/db");
+import dbConnect from "./utils/db.js";
 
 //Middleware
-const errorHandler = require("./middleware/errorHandler");
-const passport = require("passport");
-const cookieParser = require("cookie-parser");
+import errorHandler from "./middleware/errorHandler.js";
+import passport from "passport";
+import cookieParser from "cookie-parser";
 
 //Routes
-const userRoutes = require("./routes/userRoutes");
-const recipeRoutes = require("./routes/recipeRoutes");
-const ingredientRoutes = require("./routes/ingredientRoutes");
-const authRoutes = require("./routes/authRoutes");
-const unitRoutes = require("./routes/unitRoutes");
-const categoryRoutes = require("./routes/categoryRoutes");
+import ingredientRoutes from "./routes/ingredientRoutes.js";
 
-{
-  dbConnect();
+dbConnect();
 
-  //Build-in middlewares
-  app.use(cors({ origin: "http://localhost:5173", credentials: true }));
-  app.use(express.json());
-  app.use(cookieParser());
+//Build-in middlewares
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(express.json());
+app.use(cookieParser());
 
-  //Passport
-  app.use(passport.initialize());
+//Passport
+app.use(passport.initialize());
 
-  //Static files with caching
-  app.use(
-    express.static(path.join(__dirname, 'uploads')),
-    express.static(path.join(__dirname, 'uploads'), {
-      maxAge: '1h',
-      setHeaders: (res, path) => {
-        res.set('Cache-Control', 'public, max-age=3600');
-      },
-    })
-  );
+//Static files with caching
+app.use(
+  express.static(path.join(path.dirname(new URL(import.meta.url).pathname), "uploads")),
+  express.static(path.join(path.dirname(new URL(import.meta.url).pathname), "uploads"), {
+    maxAge: "1h",
+    setHeaders: (res, path) => {
+      res.set("Cache-Control", "public, max-age=3600");
+    },
+  })
+);
 
-  //Routes to endpoints
-  app.use("/user", userRoutes);
-  app.use("/recipes", recipeRoutes);
-  app.use("/ingredients", ingredientRoutes);
-  app.use("/units", unitRoutes);
-  app.use("/categories", categoryRoutes);
-  app.use("/auth", authRoutes);
-  app.use(errorHandler);
+//Routes to endpoints
+app.use("/ingredients", ingredientRoutes);
 
-  app.listen(8080);
-}
+app.use(errorHandler);
+
+app.listen(8080);
