@@ -14,6 +14,12 @@ import cookieParser from "cookie-parser";
 
 //Routes
 import ingredientRoutes from "./routes/ingredientRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import recipeRoutes from "./routes/recipeRoutes.js";
+import unitRoutes from "./routes/unitRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import { env } from "process";
 
 dbConnect();
 
@@ -38,7 +44,17 @@ app.use(
 
 //Routes to endpoints
 app.use("/ingredients", ingredientRoutes);
+app.use("/auth", authRoutes);
+app.use("/categories", categoryRoutes);
+app.use("/recipes", recipeRoutes);
+app.use("/units", unitRoutes);
+app.use("/users", userRoutes);
 
 app.use(errorHandler);
 
-app.listen(8080);
+const port = env.NODE_ENV === "prod" ? env.PROD_PORT : env.DEV_PORT;
+const apiURL = env.BACK_DEV_URL;
+app.listen(port);
+
+console.log(`Server listening on ${port}`);
+console.log(`API URL: ${apiURL}`);

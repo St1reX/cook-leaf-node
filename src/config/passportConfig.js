@@ -1,7 +1,6 @@
-const User = require("../models/User");
-
-const JwtStrategy = require("passport-jwt").Strategy;
-const passport = require("passport");
+import User from "../models/User.js";
+import { Strategy as JwtStrategy } from "passport-jwt";
+import passport from "passport";
 
 const cookieExtractor = (req) => {
   return req?.cookies?.token || null;
@@ -29,4 +28,4 @@ passport.use(
   })
 );
 
-module.exports = passport;
+export default passport;

@@ -1,17 +1,13 @@
-const mongoose = require("mongoose");
-const moment = require("moment");
-const Unit = require("../models/Unit");
+import UnitService from "../services/unitService.js";
 
-async function getUnits(req, res, next) {
-  try {
-    const units = await Unit.find({});
+export default class UnitController {
+  static async getUnits(req, res, next) {
+    try {
+      const units = await UnitService.getUnits();
 
-    res.status(200).json(units);
-  } catch (err) {
-    next(err);
+      res.status(200).json(units);
+    } catch (err) {
+      next(err);
+    }
   }
 }
-
-module.exports = {
-  getUnits,
-};

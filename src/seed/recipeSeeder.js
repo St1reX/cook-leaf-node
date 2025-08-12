@@ -1,8 +1,8 @@
-const Recipe = require("../models/Recipe");
-const User = require("../models/User");
-const Ingredient = require("../models/Ingredient");
-const Unit = require("../models/Unit");
-const Category = require("../models/Category");
+import Recipe from "../models/Recipe";
+import User from "../models/User";
+import Ingredient from "../models/Ingredient";
+import Unit from "../models/Unit";
+import Category from "../models/Category";
 
 async function seedRecipe() {
   try {
@@ -66,4 +66,4 @@ async function seedRecipe() {
   }
 }
 
-module.exports = seedRecipe;
+export default seedRecipe;

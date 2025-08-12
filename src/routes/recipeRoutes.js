@@ -1,17 +1,17 @@
 //Express
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 //Controller
-const recipeController = require("../controllers/recipeController");
+import recipeController from "../modules/controllers/recipeController.js";
 
 //Middleware
-const upload = require("../middleware/fileHandler");
-const authenticateJWT = require("../middleware/auth");
+import { upload } from "../middleware/fileHandler.js";
+import { authenticateJWT } from "../middleware/auth.js";
 
 router.get("/", recipeController.getRecipes);
 router.post("/", authenticateJWT, upload("recipes").single("photo"), recipeController.addRecipe);
 router.get("/:id", recipeController.getRecipeDetails);
 router.get("/search/autocomplete", recipeController.getRecipesByName);
 
-module.exports = router;
+export default router;

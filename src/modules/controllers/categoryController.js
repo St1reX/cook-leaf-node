@@ -1,20 +1,16 @@
-const mongoose = require("mongoose");
-const moment = require("moment");
-const Category = require("../models/Category");
+import { getCategoriesValidationSchema } from "../../validation/categorySchemas.js";
+import CategoryService from "../services/categoryService.js";
 
-async function getCategories(req, res, next) {
-  try {
-    const searchTerm = req.query.name;
+export default class CategoryController {
+  static async getCategories(req, res, next) {
+    try {
+      const validatedData = getCategoriesValidationSchema.parse(req.query);
 
-    const regex = new RegExp(searchTerm, "i");
-    const categories = await Category.find({ category_name: regex }).limit(4).exec();
+      const categories = await CategoryService.getCategoriesByName(validatedData.name);
 
-    res.status(200).json(categories);
-  } catch (err) {
-    next(err);
+      res.status(200).json(categories);
+    } catch (err) {
+      next(err);
+    }
   }
 }
-
-module.exports = {
-  getCategories,
-};

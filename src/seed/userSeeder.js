@@ -1,5 +1,5 @@
-const moment = require("moment");
-const User = require("../models/User");
+import moment from "moment";
+import User from "../models/User";
 
 async function seedUsers() {
   if (await User.findOne()) {
@@ -20,4 +20,4 @@ async function seedUsers() {
   await userExample.save();
 }
 
-module.exports = seedUsers;
+export default seedUsers;

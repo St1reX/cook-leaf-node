@@ -1,6 +1,6 @@
-const passport = require("../utils/passportConfig");
+import passport from "../config/passportConfig.js";
 
-async function authenticateJWT(req, res, next) {
+export async function authenticateJWT(req, res, next) {
   passport.authenticate("jwt", (err, user, info) => {
     if (err) {
       return res.status(500).json({ message: "Internal Server Error" });
@@ -14,5 +14,3 @@ async function authenticateJWT(req, res, next) {
     next();
   })(req, res, next);
 }
-
-module.exports = authenticateJWT;

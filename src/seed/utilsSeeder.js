@@ -1,6 +1,6 @@
-const Unit = require("../models/Unit");
-const Category = require("../models/Category");
-const Ingredient = require("../models/Ingredient");
+import Unit from "../models/Unit";
+import Category from "../models/Category";
+import Ingredient from "../models/Ingredient";
 
 async function seedUtils() {
   if (await Category.findOne()) {
@@ -74,4 +74,4 @@ async function seedUtils() {
   await Ingredient.insertMany(ingredients);
 }
 
-module.exports = seedUtils;
+export default seedUtils;

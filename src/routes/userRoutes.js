@@ -1,12 +1,12 @@
 //Express
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 //Controller
-const userController = require("../controllers/userController");
+import userController from "../modules/controllers/userController.js";
 
 //JWT Middleware
-const authenticateJWT = require("../middleware/auth");
+import { authenticateJWT } from "../middleware/auth.js";
 
 router.post("/favourites", authenticateJWT, userController.addRecipeToFavourites);
 router.delete("/favourites", authenticateJWT, userController.removeRecipeFromFavourites);
@@ -14,4 +14,4 @@ router.delete("/favourites", authenticateJWT, userController.removeRecipeFromFav
 router.post("/schedule", authenticateJWT, userController.addRecipeToScheduled);
 router.delete("/schedule", authenticateJWT, userController.removeRecipeFromScheduled);
 
-module.exports = router;
+export default router;

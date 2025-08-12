@@ -1,100 +1,57 @@
-const mongoose = require("mongoose");
-const Recipe = require("../../models/Recipe");
+import {
+  getRecipeDetailsValidationSchema,
+  getRecipesByNameValidationSchema,
+  addRecipeValidationSchema,
+} from "../../validation/recipeSchemas.js";
+import RecipeService from "../services/recipeService.js";
 
-async function getRecipes(req, res, next) {
-  try {
-    const recipes = await Recipe.aggregate([
-      {
-        $project: {
-          recipe_name: 1,
-          estimated_time: 1,
-          avg_rating: 1,
-          photo_path: 1,
-          reviews_count: { $size: "$reviews" },
-        },
-      },
-    ]);
+export default class RecipeController {
+  static async getRecipes(req, res, next) {
+    try {
+      const recipes = await RecipeService.getRecipes();
 
-    res.status(200).json(recipes);
-  } catch (err) {
-    next(err, req, res);
-  }
-}
-
-async function getRecipeDetails(req, res, next) {
-  try {
-    let recipeID = req.path.split("/");
-    recipeID = recipeID[recipeID.length - 1];
-
-    if (!mongoose.isValidObjectId(recipeID)) {
-      throw notFoundErr;
+      res.status(200).json(recipes);
+    } catch (err) {
+      next(err);
     }
+  }
 
-    const recipe = await Recipe.findById(recipeID)
-      .populate("categories")
-      .populate("ingredients.ingredient")
-      .populate("ingredients.unit")
-      .exec();
+  static async getRecipeDetails(req, res, next) {
+    try {
+      let recipeID = req.path.split("/");
+      recipeID = recipeID[recipeID.length - 1];
 
-    if (!recipe) {
-      const notFoundErr = new Error("Recipe not found!");
-      notFoundErr.status = 404;
-      throw notFoundErr;
+      const validatedData = getRecipeDetailsValidationSchema.parse({ recipeID });
+
+      const recipe = await RecipeService.getRecipeDetails(validatedData.recipeID);
+
+      res.status(200).json(recipe);
+    } catch (err) {
+      next(err);
     }
+  }
 
-    const recipeObj = recipe.toObject();
-    recipeObj.reviews_count = recipe.reviews.length;
-    res.status(200).json(recipeObj);
-  } catch (err) {
-    next(err, req, res);
+  static async getRecipesByName(req, res, next) {
+    try {
+      const validatedData = getRecipesByNameValidationSchema.parse(req.query);
+
+      const recipes = await RecipeService.getRecipesByName(validatedData.name);
+
+      res.json(recipes);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async addRecipe(req, res, next) {
+    try {
+      const validatedData = addRecipeValidationSchema.parse(req.body);
+
+      await RecipeService.addRecipe(validatedData);
+
+      res.status(200).json({ message: "Recipe created successfully!" });
+    } catch (err) {
+      next(err);
+    }
   }
 }
-
-async function getRecipesByName(req, res, next) {
-  try {
-    const searchTerm = req.query.name;
-    const regex = new RegExp(searchTerm, "i");
-    const recipes = await Recipe.find({ recipe_name: regex }).limit(8).exec();
-
-    res.json(recipes);
-  } catch (err) {
-    next(err);
-  }
-}
-
-async function addRecipe(req, res, next) {
-  try {
-    const { name, difficulty_level, portions_amount, ingredients, steps, photoName } = req.body;
-    const parsedIngredients = JSON.parse(ingredients);
-    const parsedSteps = JSON.parse(steps);
-
-    await Recipe.create({
-      recipe_name: name,
-      difficulty_level: difficulty_level,
-      portions_amount: portions_amount,
-      ingredients: parsedIngredients.map((element) => ({
-        ingredient: mongoose.Types.ObjectId.createFromHexString(element._id),
-        amount: element.amount,
-        unit: element.unit_id,
-      })),
-      steps: parsedSteps.map((element) => ({
-        description: element.description,
-        estimated_time: element.estimated_time,
-      })),
-      estimated_time: parsedSteps.reduce((acc, step) => acc + step.estimated_time, 0),
-      avg_rating: 5,
-      photo_path: "http://localhost:8080/recipes/" + photoName,
-    });
-
-    res.status(200).json({ message: "Recipe created successfully!" });
-  } catch (err) {
-    next(err);
-  }
-}
-
-module.exports = {
-  getRecipes,
-  getRecipeDetails,
-  getRecipesByName,
-  addRecipe,
-};

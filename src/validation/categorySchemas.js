@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const getIngredientsByNameValidationSchema = z.object({
+export const getCategoriesValidationSchema = z.object({
   name: z
     .string({
       required_error: "Please provide a search term",

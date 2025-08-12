@@ -1,7 +1,7 @@
-const connectDB = require("../utils/db");
-const seedRecipe = require("./recipeSeeder");
-const seedUsers = require("./userSeeder");
-const seedUtils = require("./utilsSeeder");
+import connectDB from "../utils/db";
+import seedRecipe from "./recipeSeeder";
+import seedUsers from "./userSeeder";
+import seedUtils from "./utilsSeeder";
 
 async function runSeeders() {
   try {
