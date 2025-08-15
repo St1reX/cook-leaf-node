@@ -17,7 +17,6 @@ export default class AuthService {
         password: hashedPassword,
         mail: email,
         role: "user",
-        profile_picture_path: "https://localhost:8080/uploads/avatars/basicAvatar.png",
         scheduled_recipes: [],
         favourite_recipes: [],
       });

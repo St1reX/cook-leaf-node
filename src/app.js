@@ -2,7 +2,7 @@
 import express from "express";
 const app = express();
 import cors from "cors";
-import path from "path";
+import { port, apiURL } from "./constants/config.js";
 
 //DB Connection
 import dbConnect from "./utils/db.js";
@@ -19,7 +19,6 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import recipeRoutes from "./routes/recipeRoutes.js";
 import unitRoutes from "./routes/unitRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import { env } from "process";
 
 dbConnect();
 
@@ -33,10 +32,10 @@ app.use(passport.initialize());
 
 //Static files with caching
 app.use(
-  express.static(path.join(path.dirname(new URL(import.meta.url).pathname), "uploads")),
-  express.static(path.join(path.dirname(new URL(import.meta.url).pathname), "uploads"), {
+  "/uploads",
+  express.static("uploads", {
     maxAge: "1h",
-    setHeaders: (res, path) => {
+    setHeaders: (res, filePath) => {
       res.set("Cache-Control", "public, max-age=3600");
     },
   })
@@ -48,12 +47,10 @@ app.use("/auth", authRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/recipes", recipeRoutes);
 app.use("/units", unitRoutes);
-app.use("/users", userRoutes);
+app.use("/user", userRoutes);
 
 app.use(errorHandler);
 
-const port = env.NODE_ENV === "prod" ? env.PROD_PORT : env.DEV_PORT;
-const apiURL = env.BACK_DEV_URL;
 app.listen(port);
 
 console.log(`Server listening on ${port}`);
